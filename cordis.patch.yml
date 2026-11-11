@@ -1,0 +1,5 @@
+# Provider status: one Host row that registers the balance route (and, through
+# `dsh.client`, the Client half that renders the pill and the picker captions).
+- insert:
+    - id: sf-002-provider-status
+      name: dsh-provider-status

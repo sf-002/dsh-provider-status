@@ -1,0 +1,64 @@
+{
+  "name": "dsh-provider-status",
+  "version": "0.1.5",
+  "description": "DeepSeek Harness plugin: shows the current LLM provider with its balance or remaining subscription days in the composer statistics row, and captions every provider in the model picker",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/probe.js",
+    "lib/client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-locale"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "node --test test/"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "provider",
+    "balance",
+    "subscription",
+    "clinepass",
+    "provod",
+    "plusvibe"
+  ],
+  "license": "MIT",
+  "author": "sf-002",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sf-002/dsh-provider-status.git"
+  },
+  "homepage": "https://github.com/sf-002/dsh-provider-status#readme",
+  "bugs": {
+    "url": "https://github.com/sf-002/dsh-provider-status/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

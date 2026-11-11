@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "policy": "dsh-plugin-naming/v1",
+  "plugin": {
+    "namespace": "sf-002",
+    "name": "provider-status",
+    "coordinate": "sf-002/provider-status",
+    "packageName": "dsh-provider-status"
+  },
+  "names": {
+    "pluginNames": ["provider-status"],
+    "loaderIds": ["sf-002-provider-status"],
+    "services": [],
+    "tools": [],
+    "commands": [],
+    "skills": [],
+    "skillProviders": [],
+    "events": [],
+    "settingsNamespaces": ["sf-002-provider-status"],
+    "routes": [
+      { "kind": "exact", "path": "/api/plugins/sf-002-provider-status/state" }
+    ]
+  }
+}
