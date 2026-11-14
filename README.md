@@ -36,11 +36,13 @@ the period end and the rolling usage windows; clicking forces a re-read.
 |---|---|
 | `clinepass` | `GET /users/me/plan` → plan name, price, `currentPeriodStart/End`; plus `/users/me/plan/usage-limits` for the 5-hour / weekly / monthly windows |
 | `json` | any JSON document, with the amount, currency and period end taken from dot paths (`data.balance`, `data.currency`, `data.expiresAt`) |
+| `deepseek-account` | the signed-in DeepSeek account wallets, read inside the Host through the `deepseekAccount` service |
 
 Verified against:
 
 | Provider | Endpoint | Shape |
 |---|---|---|
+| DeepSeek account (`deepseek-account`) | Host service `deepseekAccount.getBalance` | `value[]` wallets (`balance`, `currency`) plus `bonusWallets` |
 | ClinePass (`clinebot`) | `https://api.cline.bot/api/v1/users/me/plan` | `currentPeriodEnd`, `plan.displayName`, `plan.pricePerSeatCents` |
 | Provod (`provod-ai`, `provod-image`) | `https://api.provod.ai/v1/balance` | `availableBalance`, `currency` |
 | PlusVibe (`plusvibe-api`) | `https://gw.plusvibeapi.ru/v1/balance` | `balance`, `currency` |
@@ -121,8 +123,8 @@ refused, and no credential ever leaves the process.
 
 - **Picker captions are DOM decoration.** A large redesign of `MenuGroup` would break the
   `[data-menu-group-heading]` selector; the pill itself is slot-based and unaffected.
-- **No DeepSeek Account balance yet.** `ctx.deepseekAccount.getBalance` needs its
-  `AccountClientMetadata` contract audited; today it shows `—`.
+- **The DeepSeek account needs a signed-in session.** Signed out, the pill shows `—` with
+  `account is not signed in`; a failed Platform read shows `account balance unavailable`.
 - **One read per provider per interval.** There is no push channel from the providers, so the
   figure can lag by up to `refreshSeconds`.
 - **Amounts are formatted client-side** with `Intl.NumberFormat`, so the currency placement

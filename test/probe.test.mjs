@@ -140,5 +140,46 @@ const thrown = await probeProvider({ id: 'z', kind: 'json', url: 'https://exampl
 check('error text is preserved', thrown.ok === false && thrown.error === 'network down', thrown)
 check('failed record keeps identity', thrown.id === 'z' && thrown.kind === 'json', thrown)
 
+// --- deepseek official account ---------------------------------------------
+const accountSpec = { id: 'deepseek-account', kind: 'deepseek-account' }
+const ready = await probeProvider(accountSpec, {
+  resolveKey: withKey,
+  readAccountBalance: async () => ({
+    status: 'ready',
+    value: [{ currency: 'USD', balance: '12.50' }],
+    bonusWallets: [{ currency: 'USD', balance: '1.25' }],
+  }),
+})
+check('account balance', ready.ok === true && ready.balance === 12.5, ready)
+check('account currency', ready.currency === 'USD')
+check('account bonus', ready.bonusBalance === 1.25, ready.bonusBalance)
+
+const noBonus = await probeProvider(accountSpec, {
+  resolveKey: withKey,
+  readAccountBalance: async () => ({ status: 'ready', value: [{ currency: 'CNY', balance: '0' }], bonusWallets: [] }),
+})
+check('account zero balance is a value', noBonus.ok === true && noBonus.balance === 0, noBonus)
+check('account without bonus', noBonus.bonusBalance === null)
+
+const signedOut = await probeProvider(accountSpec, { resolveKey: withKey, readAccountBalance: async () => null })
+check('account signed out', signedOut.ok === false && signedOut.error === 'not-signed-in', signedOut)
+
+const accountFailed = await probeProvider(accountSpec, {
+  resolveKey: withKey,
+  readAccountBalance: async () => ({ status: 'failed' }),
+})
+check('account failed status', accountFailed.ok === false && accountFailed.error === 'balance-unavailable', accountFailed)
+
+const noService = await probeProvider(accountSpec, { resolveKey: withKey })
+check('account without service', noService.ok === false && noService.error === 'no-account-service', noService)
+
+const accountThrows = await probeProvider(accountSpec, {
+  resolveKey: withKey,
+  readAccountBalance: async () => {
+    throw new Error('platform down')
+  },
+})
+check('account error text preserved', accountThrows.ok === false && accountThrows.error === 'platform down', accountThrows)
+
 console.log(failures === 0 ? '\nALL READER CHECKS PASSED' : `\n${failures} READER CHECK(S) FAILED`)
 process.exit(failures === 0 ? 0 : 1)
