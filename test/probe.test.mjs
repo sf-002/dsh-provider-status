@@ -181,5 +181,23 @@ const accountThrows = await probeProvider(accountSpec, {
 })
 check('account error text preserved', accountThrows.ok === false && accountThrows.error === 'platform down', accountThrows)
 
+const twoCurrencies = await probeProvider(accountSpec, {
+  resolveKey: withKey,
+  readAccountBalance: async () => ({
+    status: 'ready',
+    value: [{ currency: 'USD', balance: '0' }, { currency: 'CNY', balance: '523.75' }],
+    bonusWallets: [{ currency: 'USD', balance: '3' }],
+  }),
+})
+check('account picks the funded wallet', twoCurrencies.balance === 523.75 && twoCurrencies.currency === 'CNY', twoCurrencies)
+check('account ignores a foreign bonus', twoCurrencies.bonusBalance === null, twoCurrencies.bonusBalance)
+check('account reports every wallet', twoCurrencies.wallets.length === 2, twoCurrencies.wallets)
+
+const allEmpty = await probeProvider(accountSpec, {
+  resolveKey: withKey,
+  readAccountBalance: async () => ({ status: 'ready', value: [{ currency: 'CNY', balance: '0' }], bonusWallets: [] }),
+})
+check('account falls back to the first wallet', allEmpty.currency === 'CNY' && allEmpty.balance === 0, allEmpty)
+
 console.log(failures === 0 ? '\nALL READER CHECKS PASSED' : `\n${failures} READER CHECK(S) FAILED`)
 process.exit(failures === 0 ? 0 : 1)

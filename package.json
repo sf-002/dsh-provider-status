@@ -1,6 +1,6 @@
 {
   "name": "dsh-provider-status",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "DeepSeek Harness plugin: shows the current LLM provider with its balance or remaining subscription days in the composer statistics row, and captions every provider in the model picker",
   "type": "module",
   "main": "lib/index.js",
